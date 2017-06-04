@@ -51,7 +51,7 @@ For example (failure dispatch vector):
 * `:akiroz.re-frame.whatanime/me` Get API token info from server.
 
 **Success Result:**
-```
+```clojure
 {:status 200
  :user-id 1001
  :email "soruly@gmail.com"}
@@ -67,15 +67,15 @@ image search result (see `filter` argument in the `search` fx).
 **Success Result:**
 ```clojure
 {:status 200
- :result {"1990-1999" ["Berserk"
-                       "COWBOY BEBOP"
-                       "GTO"
-                       "Sailor Moon"]
-          "2002-04"   [ ... ]
-          "2005-10"   [ ... ]
-          "Movie"     [ ... ]
-          "OVA"       [ ... ]
-          }}
+ :results {"1990-1999" ["Berserk"
+                        "COWBOY BEBOP"
+                        "GTO"
+                        "Sailor Moon"]
+           "2002-04"   [ ... ]
+           "2005-10"   [ ... ]
+           "Movie"     [ ... ]
+           "OVA"       [ ... ]
+           }}
 ```
 
 
