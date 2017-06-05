@@ -8,9 +8,8 @@
             [re-frame.core :refer [reg-fx dispatch]]
             ))
 
-(def api-host     "https://whatanime.ga")
-(def api-endpoint (str api-host "/api"))
-(def api-token    (atom nil))
+(def api-host "https://whatanime.ga")
+(def api-token (atom nil))
 
 (defn as-promise [request-fn & args]
   (p/promise
@@ -22,20 +21,26 @@
             (rjct {:status status :message body})
             (rsov response)))))))
 
+(defn blob->url [blob]
+  (p/promise (fn [rsov _]
+               (doto (new js/FileReader)
+                 (.readAsDataURL image)
+                 (.onload #(-> % .-target .-result rsov))))))
+
 (defn -me []
   (->> (as-promise http/get
-                   (str (url api-endpoint "me"))
+                   (str (url api-endpoint "api/me"))
                    {:query-params {:token @api-token}})
-       (p/map (fn [:keys [status body]]
+       (p/map (fn [{:keys [status body]}]
                 {:status  status
                  :user-id (get body "user_id")
                  :email   (get body "email")}))))
 
 (defn -list []
   (->> (as-promise http/get
-                   (str (url api-endpoint "list"))
+                   (str (url api-endpoint "api/list"))
                    {:query-params {:token @api-token}})
-       (p/map (fn [:keys [status body]]
+       (p/map (fn [{:keys [status body]}]
                 {:status status
                  :results (->> body
                                (mapv (let [[_ season anime] (re-find #"(.+)/(.+)" %)]
@@ -45,19 +50,16 @@
 
 
 (defn -search [{:keys [image] :as args}]
-  (->> (p/promise (if (string? image)
-                    image
-                    (fn [rsov]
-                      (doto (new js/FileReader)
-                        (.readAsDataURL image)
-                        (.onload #(-> % .-target .-result rsov))))))
-       (p/map (fn [image-url]
-                (as-promise http/post
-                            (str (url api-endpoint "search"))
-                            {:query-params  {:token @api-token}
-                             :form-params   {:image image-url
-                                             :filter (get args :filter "*")}})))
-       (p/map (fn [:keys [status body]]
+  (->> (if (string? image)
+         (p/promise image)
+         (blob->url image))
+       (p/mapcat (fn [image-url]
+                   (as-promise http/post
+                               (str (url api-endpoint "api/search"))
+                               {:query-params  {:token @api-token}
+                                :form-params   {:image image-url
+                                                :filter (get args :filter "*")}})))
+       (p/map (fn [{:keys [status body]}]
                 {:status      status
                  :rate-limit  {:remaining-quota  (get body "quota")
                                :reset-timeout    (get body "expire")}
@@ -92,9 +94,9 @@
                                           :ailist-id  (get result "anilist_id")}))))}))))
 
 (defn -wrap-dispatch [f]
-  (fn [:keys [success-dispatch
-              failure-dispatch]
-       :as arg]
+  (fn [{:keys [success-dispatch
+               failure-dispatch]
+        :as arg}]
     (->> (f arg)
          (p/map
            #(when success-dispatch
