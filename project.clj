@@ -10,20 +10,20 @@
                  [com.cemerick/url "0.1.1"]
                  [cljs-http "0.1.43"]]
 
-  :clean-targets ^{:protect false} ["target" "out"]
+  :clean-targets ^{:protect false} ["target"]
 
-  :profiles {:dev {:plugins [[lein-cljsbuild "1.1.6"]
-                             [lein-doo "0.1.7"]]
-                   :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
-                                  [org.clojure/clojurescript "1.9.562"]
-                                  [re-frame "0.9.4"]
-                                  [smidje "0.2.0"]]
-                   :doo {:build "test"}
-                   :cljsbuild {:builds [{:id "test"
-                                         :source-paths ["src" "test"]
-                                         :compiler {:output-to "out/testable.js"
-                                                    :optimizations :none
-                                                    :parallel-build true
-                                                    :main akiroz.re-frame.whatanime.runner}}]}}}
+  :profiles {:test {:plugins [[lein-cljsbuild "1.1.6"]
+                              [lein-doo "0.1.7"]]
+                    :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
+                                   [org.clojure/clojurescript "1.9.562"]
+                                   [re-frame "0.9.4"]
+                                   [smidje "0.2.0"]]
+                    :doo {:build "test"}
+                    :cljsbuild {:builds [{:id "test"
+                                          :source-paths ["src" "test"]
+                                          :compiler {:output-to "target/js/testable.js"
+                                                     :output-dir "target/js/out"
+                                                     :optimizations :none
+                                                     :main akiroz.re-frame.whatanime.runner}}]}}}
 
   )

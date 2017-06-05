@@ -2,6 +2,7 @@
 
 [![clojars shield][]][clojars]
 [![license shield][]][license]
+[![travis shield][]][travis]
 
 A re-frame fx for interacting with the [whatanime.ga API][].
 
@@ -127,3 +128,5 @@ image search result (see `filter` argument in the `search` fx).
 [clojars shield]: https://img.shields.io/clojars/v/akiroz.re-frame/whatanime.svg
 [license]: https://raw.githubusercontent.com/akiroz/re-frame-storage/master/LICENSE
 [license shield]: https://img.shields.io/badge/license-MIT-blue.svg
+[travis]: https://travis-ci.org/akiroz/re-frame-whatanime
+[travis shield]: https://travis-ci.org/akiroz/re-frame-whatanime.svg?branch=master

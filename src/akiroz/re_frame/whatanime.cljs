@@ -24,12 +24,12 @@
 (defn blob->url [blob]
   (p/promise (fn [rsov _]
                (doto (new js/FileReader)
-                 (.readAsDataURL image)
+                 (.readAsDataURL blob)
                  (.onload #(-> % .-target .-result rsov))))))
 
 (defn -me []
   (->> (as-promise http/get
-                   (str (url api-endpoint "api/me"))
+                   (str (url api-host "api/me"))
                    {:query-params {:token @api-token}})
        (p/map (fn [{:keys [status body]}]
                 {:status  status
@@ -38,13 +38,13 @@
 
 (defn -list []
   (->> (as-promise http/get
-                   (str (url api-endpoint "api/list"))
+                   (str (url api-host "api/list"))
                    {:query-params {:token @api-token}})
        (p/map (fn [{:keys [status body]}]
                 {:status status
                  :results (->> body
-                               (mapv (let [[_ season anime] (re-find #"(.+)/(.+)" %)]
-                                       {:season season :anime anime}))
+                               (mapv #(let [[_ season anime] (re-find #"(.+)/(.+)" %)]
+                                        {:season season :anime anime}))
                                (group-by :season)
                                (transform [MAP-VALS ALL] :anime))}))))
 
@@ -55,7 +55,7 @@
          (blob->url image))
        (p/mapcat (fn [image-url]
                    (as-promise http/post
-                               (str (url api-endpoint "api/search"))
+                               (str (url api-host "api/search"))
                                {:query-params  {:token @api-token}
                                 :form-params   {:image image-url
                                                 :filter (get args :filter "*")}})))

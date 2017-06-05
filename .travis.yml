@@ -1,0 +1,4 @@
+language: clojure
+jdk: oraclejdk8 
+lein: 2.6.1
+script: lein with-profile test doo phantom once
