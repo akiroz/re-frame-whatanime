@@ -33,8 +33,8 @@
                    {:query-params {:token @api-token}})
        (p/map (fn [{:keys [status body]}]
                 {:status  status
-                 :user-id (get body "user_id")
-                 :email   (get body "email")}))))
+                 :user-id (get body :user_id)
+                 :email   (get body :email)}))))
 
 (defn -list []
   (->> (as-promise http/get
@@ -61,37 +61,37 @@
                                                 :filter (get args :filter "*")}})))
        (p/map (fn [{:keys [status body]}]
                 {:status      status
-                 :rate-limit  {:remaining-quota  (get body "quota")
-                               :reset-timeout    (get body "expire")}
+                 :rate-limit  {:remaining-quota  (get body :quota)
+                               :reset-timeout    (get body :expire)}
                  :trials      (mapv (fn [frames search rank]
                                       {:frames-compared frames
                                        :search-time search
                                        :rank-time rank})
-                                    (get body "RawDocsCount")
-                                    (get body "RawDocsSearchTime")
-                                    (get body "ReRankSearchTime"))
-                 :results     (->> (get body "docs")
+                                    (get body :RawDocsCount)
+                                    (get body :RawDocsSearchTime)
+                                    (get body :ReRankSearchTime))
+                 :results     (->> (get body :docs)
                                    (mapv
                                      (fn [result]
-                                       (let [thumb-token (get result "tokenthumb")
-                                             match {:season (get result "season")
-                                                    :anime  (get result "anime")
-                                                    :file   (get result "filename")
-                                                    :at     (get result "at")}]
-                                         {:match (assoc match :similarity (get result "similarity"))
-                                          :title {:japanese (get result "title")
-                                                  :romaji   (get result "title_romaji")
-                                                  :english  (get result "title_english")
-                                                  :chinese  (get result "title_chinese")
-                                                  :synonyms {:english (get result "synonyms")
-                                                             :chinese (get result "synonyms_chinese")}}
+                                       (let [thumb-token (get result :tokenthumb)
+                                             match {:season (get result :season)
+                                                    :anime  (get result :anime)
+                                                    :file   (get result :filename)
+                                                    :at     (get result :at)}]
+                                         {:match (assoc match :similarity (get result :similarity))
+                                          :title {:japanese (get result :title)
+                                                  :romaji   (get result :title_romaji)
+                                                  :english  (get result :title_english)
+                                                  :chinese  (get result :title_chinese)
+                                                  :synonyms {:english (get result :synonyms)
+                                                             :chinese (get result :synonyms_chinese)}}
                                           :thumbnail  (str (assoc
                                                              (url api-host "thumbnail.php")
                                                              :query (assoc match :token thumb-token)))
                                           :preview    (str (assoc
                                                              (url api-host "preview.php")
                                                              :query (assoc match :token thumb-token)))
-                                          :ailist-id  (get result "anilist_id")}))))}))))
+                                          :ailist-id  (get result :anilist_id)}))))}))))
 
 (defn -wrap-dispatch [f]
   (fn [{:keys [success-dispatch
