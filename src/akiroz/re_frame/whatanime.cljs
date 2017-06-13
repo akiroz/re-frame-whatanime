@@ -8,7 +8,7 @@
             [re-frame.core :refer [reg-fx dispatch]]
             ))
 
-(def api-host "https://whatanime.ga")
+(goog-define api-host "https://whatanime.ga")
 (def api-token (atom nil))
 
 (defn as-promise [request-fn & args]

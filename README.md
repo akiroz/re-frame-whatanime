@@ -123,6 +123,17 @@ image search result (see `filter` argument in the `search` fx).
            { ... }]}
 ```
 
+## Advanced
+
+You ca re-define the HTTP API host at compile time by using the following clojure define:
+
+```clojure
+:closure-defines {akiroz.re-frame.whatanime/api-host "http://localhost:8000"}
+```
+
+The default value is `https://whatanime.ga`.
+
+
 [whatanime.ga API]: https://soruly.github.io/whatanime.ga
 [clojars]: https://clojars.org/akiroz.re-frame/whatanime
 [clojars shield]: https://img.shields.io/clojars/v/akiroz.re-frame/whatanime.svg
