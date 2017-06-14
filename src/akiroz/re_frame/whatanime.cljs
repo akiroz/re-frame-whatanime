@@ -46,7 +46,8 @@
                                (mapv #(let [[_ season anime] (re-find #"(.+)/(.+)" %)]
                                         {:season season :anime anime}))
                                (group-by :season)
-                               (transform [MAP-VALS ALL] :anime))}))))
+                               (transform [MAP-VALS ALL] :anime)
+                               (transform [MAP-VALS] set))}))))
 
 
 (defn -search [{:keys [image] :as args}]

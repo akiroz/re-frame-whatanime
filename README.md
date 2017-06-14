@@ -68,14 +68,14 @@ image search result (see `filter` argument in the `search` fx).
 **Success Result:**
 ```clojure
 {:status 200
- :results {"1990-1999" ["Berserk"
-                        "COWBOY BEBOP"
-                        "GTO"
-                        "Sailor Moon"]
-           "2002-04"   [ ... ]
-           "2005-10"   [ ... ]
-           "Movie"     [ ... ]
-           "OVA"       [ ... ]
+ :results {"1990-1999" #{"Berserk"
+                         "COWBOY BEBOP"
+                         "GTO"
+                         "Sailor Moon"}
+           "2002-04"   #{ ... }
+           "2005-10"   #{ ... }
+           "Movie"     #{ ... }
+           "OVA"       #{ ... }
            }}
 ```
 
